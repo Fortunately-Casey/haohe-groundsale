@@ -32,7 +32,34 @@ module.exports = {
         },
         /* 允许跨域 */
         changeOrigin: true
-      }
+      },
+      "/gis": {
+        /* 目标代理服务器地址 */
+        target: "http://223.113.1.77:26080",
+        pathRewrite: {
+          "^/gis": "/"
+        },
+        /* 允许跨域 */
+        changeOrigin: true
+      },
+      "/map": {
+        /* 目标代理服务器地址 */
+        target: "http://223.113.1.77:6080",
+        pathRewrite: {
+          "^/map": "/"
+        },
+        /* 允许跨域 */
+        changeOrigin: true
+      },
+      // "/arcgis": {
+      //   /* 目标代理服务器地址 */
+      //   target: "http://223.113.1.77:8010",
+      //   pathRewrite: {
+      //     "^/arcgis": "/"
+      //   },
+      //   /* 允许跨域 */
+      //   changeOrigin: true
+      // }
     }
   }
 };

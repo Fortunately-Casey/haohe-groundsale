@@ -12,8 +12,8 @@
         <van-field v-model="value" label="手机号码" placeholder="请输入手机号码" />
       </van-cell-group>
       <div class="idCard">
-        <van-uploader v-model="fileList" multiple :max-count="1"  capture="camara"/>
-        <van-uploader v-model="fileList1" multiple :max-count="1" capture="camara"/>
+        <van-uploader v-model="fileList" multiple :max-count="1" capture="camara" />
+        <van-uploader v-model="fileList1" multiple :max-count="1" capture="camara" />
       </div>
       <div class="id-name">
         <div class="card1">身份证背面</div>
@@ -23,14 +23,16 @@
         其他经营人（直系亲属）
         <span @click="addPerson">添加人员</span>
       </div>
-      <div>
+      <div v-if="isShowPeopleList">
         <van-cell-group
           v-for="(item,index) in otherOperators"
           :key="index"
           style="margin-bottom:10px"
         >
-          <van-field v-model="item.name" label="人员姓名" placeholder="请输入真实姓名" />
-          <van-field v-model="item.phone" label="手机号码" placeholder="请输入手机号码" />
+          <left-slider :index="index" @deleteItem="deleteItem(index)" :ref="index">
+            <van-field v-model="item.name" label="人员姓名" placeholder="请输入真实姓名" />
+            <van-field v-model="item.phone" label="手机号码" placeholder="请输入手机号码" />
+          </left-slider>
         </van-cell-group>
       </div>
       <div class="title">经营范围及摊位</div>
@@ -45,9 +47,11 @@
 
 <script>
 import { Notify } from "vant";
+import LeftSlider from "@/components/LeftSlider.vue";
 export default {
   data() {
     return {
+      isShowPeopleList: true,
       checked: false,
       value: "",
       otherOperators: [],
@@ -72,6 +76,10 @@ export default {
     onSelect(value) {
       console.log(value);
     },
+    deleteItem(index) {
+      // this.$refs.index.restSlideDelete();
+      this.otherOperators.splice(index,1);
+    },
     addPerson() {
       if (this.otherOperators.length >= 3) {
         Notify({ type: "warning", message: "最多添加三位其他经营人！" });
@@ -88,6 +96,9 @@ export default {
         Notify({ type: "warning", message: "请勾选阅读方案后进行下一步！" });
       }
     },
+  },
+  components: {
+    LeftSlider,
   },
 };
 </script>
