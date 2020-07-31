@@ -48,26 +48,26 @@ export default {
           boothNumber: "A01",
           name: "张东升",
           phone: "18662858322",
-          startTime: "2020-7-29",
+          startTime: "2020-07-29",
           status: 1,
           time: "",
         },
         {
           oddNumber: "202006010002",
-          boothNumber: "A01",
+          boothNumber: "A02",
           name: "张东升",
           phone: "18662858322",
           status: 2,
-          startTime: "2020-7-30",
+          startTime: "2020-07-30",
           time: "",
         },
         {
           oddNumber: "202006010003",
-          boothNumber: "A01",
+          boothNumber: "A03",
           name: "张东升",
           phone: "18662858322",
           status: 3,
-          startTime: "2020-7-31",
+          startTime: "2020-07-31",
           time: "",
         },
       ],
@@ -75,9 +75,9 @@ export default {
   },
   mounted() {
     let vm = this;
-    // vm.applyList.map((v) => {
-    //   v.time = vm.InitTime(v.startTime);
-    // });
+    vm.applyList.map((v) => {
+      v.time = vm.InitTime(v.startTime);
+    });
     setInterval(() => {
       vm.applyList.map((v) => {
         v.time = vm.InitTime(v.startTime);
@@ -92,18 +92,18 @@ export default {
       var future = Number(current) + (3 * 24 * 3600 * 1000);
       //设置截止时间
       // var endDate = new Date("2020-8-2 17:00:00");
-      // var end = date + future;
+      var end = future;
       //时间差
-      var leftTime = future;
+      var leftTime = future - now;
       // //定义变量 d,h,m,s保存倒计时的时间
-      // var d, h, m, s;
-      // if (leftTime >= 0) {
-      //   // d = Math.floor(leftTime / 1000 / 60 / 60 / 24);
-      //   h = Math.floor(leftTime / 1000 / 60 / 60);
-      //   m = Math.floor((leftTime / 1000 / 60) % 60);
-      //   s = Math.floor((leftTime / 1000) % 60);
-      // }
-      // return h + ":" + m + ":" + s;
+      var d, h, m, s;
+      if (leftTime >= 0) {
+        // d = Math.floor(leftTime / 1000 / 60 / 60 / 24);
+        h = Math.floor(leftTime / 1000 / 60 / 60);
+        m = Math.floor((leftTime / 1000 / 60) % 60);
+        s = Math.floor((leftTime / 1000) % 60);
+      }
+      return h + ":" + m + ":" + s;
       return leftTime;
 
     },

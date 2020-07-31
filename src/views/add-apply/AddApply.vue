@@ -40,7 +40,7 @@
       <van-action-sheet v-model="isShowRange" :actions="actions" @select="onSelect" />
     </div>
     <div class="bottom">
-      <div class="chose-button">选择摊位</div>
+      <div class="chose-button" @click="choseMap">选择摊位</div>
     </div>
   </div>
 </template>
@@ -96,6 +96,11 @@ export default {
         Notify({ type: "warning", message: "请勾选阅读方案后进行下一步！" });
       }
     },
+    choseMap() {
+      this.$router.push({
+        path:"/applyMap"
+      })
+    }
   },
   components: {
     LeftSlider,
