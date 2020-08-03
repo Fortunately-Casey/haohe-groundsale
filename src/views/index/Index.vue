@@ -2,12 +2,12 @@
   <div class="index">
     <div class="header">
       <div class="back" @click="back">
-        <van-icon name="arrow-left" />返回
+        <!-- <van-icon name="arrow-left" />返回 -->
       </div>我的申请
-      <div class="logout">退出登录</div>
+      <div class="logout" @click="logout">退出登录</div>
     </div>
     <div class="content">
-      <div class="apply-list">
+      <div class="apply-list" v-if="applyList.length">
         <div class="item" v-for="(item,index) in applyList" :key="index">
           <div class="top">
             <div class="left">单号：{{item.oddNumber}}</div>
@@ -32,7 +32,7 @@
           </div>
         </div>
       </div>
-      <!-- <div class="empty-box"></div> -->
+      <div class="empty-box" v-else></div>
       <div class="add-button" @click="addNewApply">新增申请</div>
     </div>
   </div>
@@ -48,7 +48,7 @@ export default {
           boothNumber: "A01",
           name: "张东升",
           phone: "18662858322",
-          startTime: "2020-07-29",
+          startTime: "2020-08-01",
           status: 1,
           time: "",
         },
@@ -58,7 +58,7 @@ export default {
           name: "张东升",
           phone: "18662858322",
           status: 2,
-          startTime: "2020-07-30",
+          startTime: "2020-08-01",
           time: "",
         },
         {
@@ -67,7 +67,7 @@ export default {
           name: "张东升",
           phone: "18662858322",
           status: 3,
-          startTime: "2020-07-31",
+          startTime: "2020-08-02",
           time: "",
         },
       ],
@@ -89,7 +89,7 @@ export default {
       var date = new Date();
       var current = new Date(startTime).getTime();
       var now = date.getTime();
-      var future = Number(current) + (3 * 24 * 3600 * 1000);
+      var future = Number(current) + 3 * 24 * 3600 * 1000;
       //设置截止时间
       // var endDate = new Date("2020-8-2 17:00:00");
       var end = future;
@@ -105,14 +105,13 @@ export default {
       }
       return h + ":" + m + ":" + s;
       return leftTime;
-
     },
     addNewApply() {
       if (this.applyList.length === 0) {
         this.$router.push({
           path: "/agreement",
         });
-      }else {
+      } else {
         this.$router.push({
           path: "/addApply",
         });
@@ -134,6 +133,11 @@ export default {
       return stu;
     },
     back() {},
+    logout() {
+      this.$router.push({
+        path: "/login",
+      });
+    },
   },
 };
 </script>

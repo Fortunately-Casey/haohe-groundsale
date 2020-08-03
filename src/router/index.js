@@ -27,11 +27,11 @@ const routes = [{
     name: 'addApply',
     component: resolve => require(['../views/add-apply/AddApply.vue'], resolve)
   },
-  {
-    path: '/applyMap',
-    name: 'map',
-    component: resolve => require(['../views/map/Map.vue'], resolve)
-  },
+  // {
+  //   path: '/applyMap',
+  //   name: 'map',
+  //   component: resolve => require(['../views/map/Map.vue'], resolve)
+  // },
   {
     path: '/commitLetter',
     name: 'commitLetter',

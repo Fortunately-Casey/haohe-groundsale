@@ -15,13 +15,21 @@
           style="margin-right:10px"
           src="https://img.yzcdn.cn/vant/cat.jpeg"
           @click="choseImage"
-        />
+        >
+          <template v-slot:loading>
+            <van-loading type="spinner" size="20" />
+          </template>
+        </van-image>
         <van-image
           width="130"
           height="80"
           src="https://img.yzcdn.cn/vant/cat.jpeg"
           @click="choseImage"
-        />
+        >
+          <template v-slot:loading>
+            <van-loading type="spinner" size="20" />
+          </template>
+        </van-image>
         <div class="chose-button">选择摊位</div>
       </div>
     </van-action-sheet>

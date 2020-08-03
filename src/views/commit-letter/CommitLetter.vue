@@ -55,9 +55,7 @@ export default {
       this.Signature_Pad.clear();
     },
     back() {
-      this.$router.push({
-        path: "/index",
-      });
+      this.$router.go(-1);
     },
     commit() {
       // const img = this.Signature_Pad.saveAsImg();

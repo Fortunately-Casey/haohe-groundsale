@@ -1,30 +1,30 @@
-import Vue from 'vue'
-import App from './App.vue'
-import router from './router'
-import store from './store'
+import Vue from 'vue';
+import App from './App.vue';
+import router from './router';
+import store from './store';
 import "lib-flexible/flexible.js";
-import '@/assets/css/reset.css'
+import '@/assets/css/reset.css';
 import Vant from "vant";
 import "vant/lib/index.css";
 import Mint from "mint-ui";
 import "mint-ui/lib/style.css";
-import esriLoader from "esri-loader";
+// import esriLoader from "esri-loader";
 
 Vue.config.productionTip = false
 
-esriLoader.loadScript({
-  dojoConfig: {
-    async: true,
-    packages: [
-      {
-        location: "/static",
-        name: "static"
-      }
-    ]
-  },
-  // url: "https://js.arcgis.com/4.15/init.js"
-  url: "/static/arcgis/init.js"
-});
+// esriLoader.loadScript({
+//   dojoConfig: {
+//     async: true,
+//     packages: [
+//       {
+//         location: "/static",
+//         name: "static"
+//       }
+//     ]
+//   },
+//   // url: "https://js.arcgis.com/4.15/init.js"
+//   url: "/static/arcgis/init.js"
+// });
 
 Vue.use(Vant);
 Vue.use(Mint);

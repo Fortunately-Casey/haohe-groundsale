@@ -19,6 +19,17 @@
         <div class="card1">身份证背面</div>
         <div class="card2">身份证正面</div>
       </div>
+      <van-cell-group>
+        <van-field v-model="value" label="户号" placeholder="请输入户号" />
+      </van-cell-group>
+      <div class="houseID">
+        <van-uploader v-model="fileList" multiple :max-count="1" capture="camara" />
+        <van-uploader v-model="fileList1" multiple :max-count="1" capture="camara" />
+      </div>
+      <div class="id-name">
+        <div class="card1">户口本背面</div>
+        <div class="card2">户口本正面</div>
+      </div>
       <div class="title">
         其他经营人（直系亲属）
         <span @click="addPerson">添加人员</span>
@@ -35,12 +46,44 @@
           </left-slider>
         </van-cell-group>
       </div>
-      <div class="title">经营范围及摊位</div>
-      <van-cell is-link title="经营范围" @click="isShowRange = true" />
-      <van-action-sheet v-model="isShowRange" :actions="actions" @select="onSelect" />
+      <div class="title">经营范围及摊位类型</div>
+      <van-field
+        readonly
+        clickable
+        name="picker"
+        :value="range"
+        label="经营范围"
+        placeholder="点击选择经营范围"
+        @click="isShowRange = true"
+      />
+      <van-popup v-model="isShowRange" position="bottom">
+        <van-picker
+          show-toolbar
+          :columns="rangeColumns"
+          @confirm="rangeConfirm"
+          @cancel="isShowRange = false"
+        />
+      </van-popup>
+      <van-field
+        readonly
+        clickable
+        name="picker"
+        :value="type"
+        label="摊位类型"
+        placeholder="点击选择摊位类型"
+        @click="isShowType = true"
+      />
+      <van-popup v-model="isShowType" position="bottom">
+        <van-picker
+          show-toolbar
+          :columns="typeColumns"
+          @confirm="typeConfirm"
+          @cancel="isShowType = false"
+        />
+      </van-popup>
     </div>
     <div class="bottom">
-      <div class="chose-button" @click="choseMap">选择摊位</div>
+      <div class="chose-button" @click="next">下一步</div>
     </div>
   </div>
 </template>
@@ -53,18 +96,25 @@ export default {
     return {
       isShowPeopleList: true,
       checked: false,
-      value: "",
-      otherOperators: [],
-      actions: [
-        { name: "儿童玩具、纪念品、工艺品", id: "111" },
-        { name: "小型游乐项目", id: "111" },
-        { name: "服装衣饰", id: "111" },
-        { name: "图书音像", id: "111" },
-        { name: "绿植花卉", id: "111" },
+      range: "",
+      otherOperators: [
+        {
+          name: "",
+          phone: "",
+        },
       ],
+      rangeColumns: [
+        "儿童玩具、纪念品、工艺品",
+        "小型游乐项目",
+        "服装衣饰",
+        "图书音像",
+        "绿植花卉",
+      ],
+      typeColumns: ["A", "B"],
       fileList: [],
       fileList1: [],
       isShowRange: false,
+      isShowType: false,
     };
   },
   methods: {
@@ -78,7 +128,7 @@ export default {
     },
     deleteItem(index) {
       // this.$refs.index.restSlideDelete();
-      this.otherOperators.splice(index,1);
+      this.otherOperators.splice(index, 1);
     },
     addPerson() {
       if (this.otherOperators.length >= 3) {
@@ -90,17 +140,25 @@ export default {
         phone: "",
       });
     },
+    rangeConfirm(value) {
+      this.range = value;
+      this.isShowRange = false;
+    },
+    typeConfirm(value) {
+      this.type = value;
+      this.isShowType = false;
+    },
     nextStep() {
       if (this.checked) {
       } else {
         Notify({ type: "warning", message: "请勾选阅读方案后进行下一步！" });
       }
     },
-    choseMap() {
+    next() {
       this.$router.push({
-        path:"/applyMap"
-      })
-    }
+        path: "/commitLetter",
+      });
+    },
   },
   components: {
     LeftSlider,
@@ -158,7 +216,7 @@ export default {
         margin-right: 10px;
       }
     }
-    .idCard {
+    .idCard ,.houseID{
       display: flex;
       padding: 15px 0 0 15px;
       background-color: #fff;
