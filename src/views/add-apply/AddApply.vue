@@ -584,6 +584,9 @@ export default {
   .bottom {
     height: 60px;
     background: #edf2f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     .chose-button {
       width: 250px;
       height: 35px;
@@ -593,10 +596,6 @@ export default {
       color: #fff;
       background: #ed8936;
       font-size: 16px;
-      position: absolute;
-      left: 50%;
-      bottom: 10px;
-      transform: translateX(-50%);
     }
   }
 }

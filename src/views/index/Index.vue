@@ -31,7 +31,7 @@
             </div>
             <div class="status" :class="returnStatus(item)"></div>
           </div>
-          <div class="time">
+          <div class="time" v-if="item.status === 1">
             倒计时：
             <span>{{item.time}}</span>
           </div>
@@ -132,6 +132,8 @@ export default {
       let stu;
       if (item.status === 1) {
         return "audit";
+      } else if (item.status === 3) {
+        return "lose";
       } else if (item.status === 2 && item.auditResult) {
         return "pass";
       } else if (item.status === 2 && !item.auditResult) {
@@ -253,6 +255,10 @@ export default {
           }
           .audit {
             background: url("../../assets/image/audit.png") no-repeat;
+            background-size: 100% 100%;
+          }
+          .lose {
+            background: url("../../assets/image/lose-efficacy.png") no-repeat;
             background-size: 100% 100%;
           }
         }
