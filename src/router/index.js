@@ -42,6 +42,11 @@ const routes = [{
     name: 'applyFinished',
     component: resolve => require(['../views/apply-finished/ApplyFinished.vue'], resolve)
   },
+  {
+    path: '/applyDetail',
+    name: 'applyDetail',
+    component: resolve => require(['../views/detail/Detail.vue'], resolve)
+  },
 ]
 
 const router = new VueRouter({

@@ -6,33 +6,33 @@
       <div class="login-box" v-if="isLogin">
         <div class="input">
           <i class="iconfont">&#xe71f;</i>
-          <input type="text" placeholder="输入手机号" @blur="blur"/>
+          <input type="text" placeholder="输入手机号" @blur="blur" v-model="userID" />
         </div>
         <div class="input">
           <i class="iconfont">&#xe601;</i>
-          <input type="text" placeholder="输入密码" @blur="blur"/>
+          <input type="password" placeholder="输入密码" @blur="blur" v-model="password" />
         </div>
         <div class="login-button" @click="loginConfirm">登 录</div>
       </div>
       <div class="register-box" v-else>
         <div class="input">
           <i class="iconfont">&#xe71f;</i>
-          <input type="text" placeholder="输入手机号" @blur="blur"/>
+          <input type="text" placeholder="输入手机号" v-model="loginUserID" @blur="blur" />
         </div>
         <div class="input">
           <i class="iconfont">&#xe601;</i>
-          <input type="text" placeholder="输入8-20位登录密码" @blur="blur"/>
+          <input type="password" placeholder="输入8-20位登录密码" @blur="blur" v-model="loginPWD" />
         </div>
         <div class="input">
           <i class="iconfont">&#xe601;</i>
-          <input type="text" placeholder="请再次输入密码" @blur="blur"/>
+          <input type="password" placeholder="请再次输入密码" @blur="blur" v-model="confirmPwd" />
         </div>
         <div class="agreement">
           <van-checkbox v-model="checked" shape="square" icon-size="14px" checked-color="#a0aec0"></van-checkbox>
           <span>同意</span>
           <span class="agree">《用户服务协议》</span>
         </div>
-        <div class="register-button">注 册</div>
+        <div class="register-button" @click="registerConfirm">注 册</div>
       </div>
       <p v-if="isLogin">
         还没有账户？请先
@@ -49,13 +49,32 @@
 
 <script>
 import { blur } from "@/common/tool/tool";
+import * as api from "@/service/apiList";
+import http from "@/service/service";
+import { Toast, Notify } from "vant";
+import { Indicator } from "mint-ui";
 export default {
   data() {
     return {
+      userID: "",
+      password: "",
+      loginUserID: "",
+      loginPWD: "",
+      confirmPwd: "",
       bodyHeight: "",
       isLogin: true,
       checked: false,
     };
+  },
+  created() {
+    let username = window.localStorage.getItem("username");
+    let password = window.localStorage.getItem("password");
+    if (username) {
+      this.userID = username;
+    }
+    if (password) {
+      this.password = password;
+    }
   },
   mounted() {
     this.bodyHeight = document.documentElement.clientHeight;
@@ -68,9 +87,71 @@ export default {
       this.isLogin = true;
     },
     loginConfirm() {
-      this.$router.push({
-        path:'/index'
-      })
+      let vm = this;
+      if (!vm.userID || !vm.password) {
+        Toast("请填写完整的登录信息!");
+        return;
+      }
+      Indicator.open();
+      http
+        .post(api.LOGIN, {
+          loginUserID: vm.userID,
+          loginPWD: vm.password,
+        })
+        .then((resp) => {
+          if (resp.data.success) {
+            window.localStorage.setItem("token", resp.data.data.token);
+            window.localStorage.setItem("username", vm.userID);
+            window.localStorage.setItem("password", vm.password);
+            Notify({ type: "success", message: "登录成功!" });
+            vm.isLogin = true;
+            this.$router.push({
+              path: "/index",
+            });
+            Indicator.close();
+          } else {
+            Indicator.close();
+            Notify({ type: "danger", message: "登录失败!" });
+          }
+        });
+    },
+    registerConfirm() {
+      let vm = this;
+      var phoneReg = /^1[3456789]\d{9}$/;
+      if (!phoneReg.test(Number(vm.loginUserID))) {
+        Toast({
+          message: "请输入合法手机号！",
+          iconClass: "icon icon-success",
+        });
+        return;
+      }
+      if (!vm.checked) {
+        Toast("请同意用户协议!");
+        return;
+      }
+      if (!vm.loginUserID || !vm.loginPWD || !vm.confirmPwd) {
+        Toast("请填写完整的注册信息!");
+        return;
+      }
+      Indicator.open();
+      http
+        .post(api.REGISTERED, {
+          loginUserID: vm.loginUserID,
+          loginPWD: vm.loginPWD,
+          confirmPwd: vm.confirmPwd,
+        })
+        .then((resp) => {
+          Indicator.close();
+          if (resp.data.success) {
+            vm.loginUserID = "";
+            vm.loginPWD = "";
+            vm.confirmPwd = "";
+            Notify({ type: "success", message: "注册成功!" });
+            vm.isLogin = true;
+          } else {
+            Notify({ type: "danger", message: "注册失败!" });
+          }
+        });
     },
     blur() {
       blur();
@@ -128,12 +209,12 @@ export default {
         box-sizing: border-box;
         height: 35px;
         line-height: 35px;
-        font-size: 14px; 
+        font-size: 14px;
         -webkit-appearance: none;
         padding-left: 25px;
         font-size: 14px;
       }
-      ::-webkit-input-placeholder { 
+      ::-webkit-input-placeholder {
         color: #a0aec0;
       }
     }

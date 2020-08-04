@@ -9,16 +9,16 @@
     <div class="content">
       <p>
         您已申请
-        <span>A01</span>摊位
+        <span>{{type}}</span>摊位
       </p>
-      <p>请您于<span style="color:#dd2626">2020年6月22日17:00</span>前，携带身份证、户口本等相关证件，前往濠河管理中心进行现场审核，逾期作废。</p>
+      <p>请您于<span style="color:#dd2626">{{date}} 17:00</span>前，携带身份证、户口本等相关证件，前往濠河管理中心进行现场审核，逾期作废。</p>
       <p>审核内容包括：</p>
       <p>（1）确认摊位号</p>
       <p>（2）缴纳押金、管理费</p>
       <p style="text-align:right">南通濠河管理处</p>
     </div>
     <div class="bottom-agree" :class="checked?'checked':'unchecked'">
-      <div class="chose-button" @click="commit">返回首页</div>
+      <div class="chose-button" @click="back">返回首页</div>
     </div>
   </div>
 </template>
@@ -30,16 +30,23 @@ export default {
     return {
       checked: false,
       Signature_Pad: "",
+      type:"",
+      date:""
     };
   },
-  mounted() {},
+  created() {
+    this.type = this.$route.query.type;
+    this.date = this.$route.query.date.split(" ")[0];
+  },
+  mounted() {
+  
+  },
   methods: {
     back() {
       this.$router.push({
         path: "/index",
       });
     },
-    commit() {},
   },
 };
 </script>

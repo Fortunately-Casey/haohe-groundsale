@@ -26,40 +26,13 @@ module.exports = {
       "/api": {
         /* 目标代理服务器地址 */
         // target: "https://yqfk.ntkfqjy.com:20000",
-        target: "http://223.113.1.77:10058",
-        pathRewrite: {
-          "^/api": "/"
-        },
+        target: "http://223.113.1.77:20058",
+        // pathRewrite: {
+        //   "^/api": "/"
+        // },
         /* 允许跨域 */
         changeOrigin: true
       },
-      "/gis": {
-        /* 目标代理服务器地址 */
-        target: "http://223.113.1.77:26080",
-        pathRewrite: {
-          "^/gis": "/"
-        },
-        /* 允许跨域 */
-        changeOrigin: true
-      },
-      "/map": {
-        /* 目标代理服务器地址 */
-        target: "http://223.113.1.77:6080",
-        pathRewrite: {
-          "^/map": "/"
-        },
-        /* 允许跨域 */
-        changeOrigin: true
-      },
-      // "/arcgis": {
-      //   /* 目标代理服务器地址 */
-      //   target: "http://223.113.1.77:8010",
-      //   pathRewrite: {
-      //     "^/arcgis": "/"
-      //   },
-      //   /* 允许跨域 */
-      //   changeOrigin: true
-      // }
     }
   }
 };

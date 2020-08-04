@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <router-view />
+    <keep-alive>
+      <router-view />
+    </keep-alive>
   </div>
 </template>
 
@@ -35,5 +37,17 @@ body {
   content: ""!important;
   border: none!important;
   color: rgba(0, 0, 0, 0)!important;
+}
+.mint-indicator-wrapper {
+  z-index: 999!important;
+}
+.van-field__control:disabled {
+  color: #323233!important;
+}
+.van-field--disabled .van-field__label{
+  color: #646566!important;
+}
+.van-uploader__wrapper--disabled {
+  opacity: 1!important;
 }
 </style>

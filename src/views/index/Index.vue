@@ -8,12 +8,17 @@
     </div>
     <div class="content">
       <div class="apply-list" v-if="applyList.length">
-        <div class="item" v-for="(item,index) in applyList" :key="index">
+        <div
+          class="item"
+          v-for="(item,index) in applyList"
+          :key="index"
+          @click="goToDetail(item.id)"
+        >
           <div class="top">
-            <div class="left">单号：{{item.oddNumber}}</div>
+            <div class="left">单号：{{item.id}}</div>
             <div class="right">
-              摊位号：
-              <span>{{item.boothNumber}}</span>
+              摊位类型：
+              <span>{{item.businessType}}</span>
             </div>
           </div>
           <div class="item-content">
@@ -24,7 +29,7 @@
               <div class="name">{{item.name}}</div>
               <div class="phone">{{item.phone}}</div>
             </div>
-            <div class="status" :class="returnStatus(item.status)"></div>
+            <div class="status" :class="returnStatus(item)"></div>
           </div>
           <div class="time">
             倒计时：
@@ -33,66 +38,72 @@
         </div>
       </div>
       <div class="empty-box" v-else></div>
+    </div>
+    <div class="bottom">
       <div class="add-button" @click="addNewApply">新增申请</div>
     </div>
   </div>
 </template>
 
 <script>
+import * as api from "@/service/apiList";
+import http from "@/service/service";
+import { Toast, Notify } from "vant";
+import { Indicator } from "mint-ui";
+import { Todate } from "@/common/tool/tool";
 export default {
   data() {
     return {
-      applyList: [
-        {
-          oddNumber: "202006010001",
-          boothNumber: "A01",
-          name: "张东升",
-          phone: "18662858322",
-          startTime: "2020-08-01",
-          status: 1,
-          time: "",
-        },
-        {
-          oddNumber: "202006010002",
-          boothNumber: "A02",
-          name: "张东升",
-          phone: "18662858322",
-          status: 2,
-          startTime: "2020-08-01",
-          time: "",
-        },
-        {
-          oddNumber: "202006010003",
-          boothNumber: "A03",
-          name: "张东升",
-          phone: "18662858322",
-          status: 3,
-          startTime: "2020-08-02",
-          time: "",
-        },
-      ],
+      applyList: [],
     };
   },
-  mounted() {
-    let vm = this;
-    vm.applyList.map((v) => {
-      v.time = vm.InitTime(v.startTime);
-    });
-    setInterval(() => {
-      vm.applyList.map((v) => {
-        v.time = vm.InitTime(v.startTime);
-      });
-    }, 1000);
+  created() {
+    this.getList();
   },
+  mounted() {},
   methods: {
-    InitTime(startTime) {
+    getList() {
+      let vm = this;
+      Indicator.open();
+      vm.applyList = [];
+      http.get(api.GETSTALLLISTBYUSERID, {}).then((resp) => {
+        Indicator.close();
+        resp.data.data.map((v) => {
+          vm.applyList.push({
+            id: v.id,
+            name: v.name,
+            phone: v.phone,
+            status: v.status,
+            endTime: v.endTime,
+            businessType: v.businessType,
+            time: vm.InitTime(v.endTime),
+          });
+        });
+        vm.timeInterval();
+      });
+    },
+    goToDetail(id) {
+      this.$router.push({
+        path: "/applyDetail",
+        query: {
+          id: id,
+        },
+      });
+    },
+    timeInterval() {
+      let vm = this;
+      setInterval(() => {
+        vm.applyList.map((v) => {
+          v.time = vm.InitTime(v.endTime);
+        });
+      }, 1000);
+    },
+    InitTime(endTime) {
       var date = new Date();
-      var current = new Date(startTime).getTime();
       var now = date.getTime();
-      var future = Number(current) + 3 * 24 * 3600 * 1000;
       //设置截止时间
-      // var endDate = new Date("2020-8-2 17:00:00");
-      var end = future;
+      var future =
+        new Date(String(endTime.split(" ")[0])).getTime() + 9 * 3600 * 1000;
       //时间差
       var leftTime = future - now;
       // //定义变量 d,h,m,s保存倒计时的时间
@@ -117,20 +128,15 @@ export default {
         });
       }
     },
-    returnStatus(status) {
+    returnStatus(item) {
       let stu;
-      switch (status) {
-        case 1:
-          stu = "pass";
-          break;
-        case 2:
-          stu = "not-pass";
-          break;
-        case 3:
-          stu = "audit";
-          break;
+      if (item.status === 1) {
+        return "audit";
+      } else if (item.status === 2 && item.auditResult) {
+        return "pass";
+      } else if (item.status === 2 && !item.auditResult) {
+        return "not-pass";
       }
-      return stu;
     },
     back() {},
     logout() {
@@ -177,9 +183,9 @@ export default {
   }
   .content {
     flex: 1;
-    padding-bottom: 60px;
     position: relative;
     background: #edf2f6;
+    overflow-y: auto;
     .apply-list {
       .item {
         background-color: #fff;
@@ -281,6 +287,11 @@ export default {
       font-size: 16px;
       color: #a0aec0;
     }
+  }
+  .bottom {
+    height: 50px;
+    position: relative;
+    background: #edf2f6;
     .add-button {
       width: 250px;
       height: 35px;

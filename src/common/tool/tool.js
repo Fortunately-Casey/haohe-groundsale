@@ -6,7 +6,7 @@ export function Todate(chinadatetime) {
     var month =
       d.getMonth() + 1 >= 10 ? d.getMonth() + 1 : "0" + (d.getMonth() + 1);
     var date = d.getDate() >= 10 ? d.getDate() : "0" + d.getDate();
-    var datetime = d.getFullYear() + "-" + month + "-" + date;
+    var datetime = d.getFullYear() + "年" + month + "月" + date + "日";
     return datetime;
   } else {
     return "";
@@ -75,6 +75,16 @@ export function compare(property) {
     var value2 = b[property];
     return value1 - value2;
   };
+}
+
+export const getRandomString = (num) => {
+  let str = ''
+  const text = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+  for (let i = 0; i < num; i++) {
+    const pos = Math.round(Math.random() * (text.length - 1))
+    str += text.charAt(pos)
+  }
+  return str
 }
 
 export default class AddressName {
