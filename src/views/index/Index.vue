@@ -48,7 +48,7 @@
 <script>
 import * as api from "@/service/apiList";
 import http from "@/service/service";
-import { Toast, Notify } from "vant";
+import { Toast, Notify , Dialog} from "vant";
 import { Indicator } from "mint-ui";
 import { Todate } from "@/common/tool/tool";
 export default {
@@ -142,9 +142,18 @@ export default {
     },
     back() {},
     logout() {
-      this.$router.push({
-        path: "/login",
-      });
+      Dialog.confirm({
+        title: "退出账号",
+        message: "确认要退出当前账号吗？",
+      })
+        .then(() => {
+          this.$router.push({
+            path: "/login",
+          });
+        })
+        .catch(() => {
+          // on cancel
+        });
     },
   },
 };

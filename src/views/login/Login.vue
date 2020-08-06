@@ -111,7 +111,7 @@ export default {
             Indicator.close();
           } else {
             Indicator.close();
-            Notify({ type: "danger", message: "登录失败!" });
+            Notify({ type: "danger", message: resp.data.message });
           }
         });
     },
@@ -157,7 +157,7 @@ export default {
             Notify({ type: "success", message: "注册成功!" });
             vm.isLogin = true;
           } else {
-            Notify({ type: "danger", message: "注册失败!" });
+            Notify({ type: "danger", message: resp.data.message });
           }
         });
     },

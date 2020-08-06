@@ -19,6 +19,7 @@
           capture="camara"
           disabled
           :deletable="false"
+          image-fit="cover"
         />
         <van-uploader
           v-model="certFrontPic"
@@ -27,6 +28,7 @@
           capture="camara"
           disabled
           :deletable="false"
+          image-fit="cover"
         />
       </div>
       <div class="id-name">
@@ -44,6 +46,7 @@
           capture="camara"
           disabled
           :deletable="false"
+          image-fit="cover"
         />
         <van-uploader
           v-model="householdPicFront"
@@ -52,6 +55,7 @@
           capture="camara"
           disabled
           :deletable="false"
+          image-fit="cover"
         />
       </div>
       <div class="id-name">

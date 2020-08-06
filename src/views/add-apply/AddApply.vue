@@ -18,6 +18,7 @@
           :max-count="1"
           :after-read="uploadImgs"
           capture="camera"
+          image-fit="cover"
         />
         <van-uploader
           v-model="certFrontPic"
@@ -25,6 +26,7 @@
           :max-count="1"
           :after-read="uploadImgs"
           capture="camera"
+          image-fit="cover"
         />
       </div>
       <div class="id-name">
@@ -41,6 +43,7 @@
           :max-count="1"
           :after-read="uploadImgs"
           capture="camera"
+          image-fit="cover"
         />
         <van-uploader
           v-model="householdPicFront"
@@ -48,6 +51,7 @@
           :max-count="1"
           :after-read="uploadImgs"
           capture="camera"
+          image-fit="cover"
         />
       </div>
       <div class="id-name">
@@ -337,13 +341,13 @@ export default {
         // 监听浏览器加载图片完成，然后进行进行绘制
         img.onload = () => {
           // 指定canvas画布大小，该大小为最后生成图片的大小
-          canvas.width = 300;
-          canvas.height = 400;
+          canvas.width = 600;
+          canvas.height = 800;
           /* drawImage画布绘制的方法。(0,0)表示以Canvas画布左上角为起点，400，300是将图片按给定的像素进行缩小。
           如果不指定缩小的像素图片将以图片原始大小进行绘制，图片像素如果大于画布将会从左上角开始按画布大小部分绘制图片，最后的图片就是张局部图。*/
-          context.drawImage(img, 0, 0, 400, 300);
+          context.drawImage(img, 0, 0, 600, 800);
           // 将绘制完成的图片重新转化为base64编码，file.file.type为图片类型，0.92为默认压缩质量
-          file.content = canvas.toDataURL(file.file.type, 0.92);
+          file.content = canvas.toDataURL(file.file.type, 1);
           // console.log(file)
           // 最后将base64编码的图片保存到数组中，留待上传。
         };
