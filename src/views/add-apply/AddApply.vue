@@ -59,16 +59,25 @@
         <span @click="addPerson">添加人员</span>
       </div>
       <div v-if="isShowPeopleList">
-        <van-cell-group
+        <van-swipe-cell
           v-for="(item,index) in otherOperators"
           :key="index"
           style="margin-bottom:10px"
         >
-          <left-slider :index="index" @deleteItem="deleteItem(index)" :ref="index">
+          <van-cell-group>
             <van-field v-model="item.linkman" label="人员姓名" placeholder="请输入真实姓名" />
             <van-field v-model="item.linkPhone" type="number" label="手机号码" placeholder="请输入手机号码" />
-          </left-slider>
-        </van-cell-group>
+          </van-cell-group>
+          <template #right>
+            <van-button
+              square
+              text="删除"
+              type="danger"
+              class="delete-button"
+              @click="deleteItem(index)"
+            />
+          </template>
+        </van-swipe-cell>
       </div>
       <div class="title">经营范围及摊位类型</div>
       <van-field
@@ -142,7 +151,6 @@ import * as api from "@/service/apiList";
 import http from "@/service/service";
 import { Toast, Notify } from "vant";
 import { Indicator } from "mint-ui";
-import LeftSlider from "@/components/LeftSlider.vue";
 import { Todate, getRandomString } from "@/common/tool/tool";
 import SignaturePad from "signature_pad";
 export default {
@@ -481,9 +489,7 @@ export default {
       return new Blob([uInt8Array], { type: contentType });
     },
   },
-  components: {
-    LeftSlider,
-  },
+  components: {},
 };
 </script>
 <style lang="less" scoped>
@@ -492,6 +498,9 @@ export default {
   display: flex;
   flex-direction: column;
   background: #edf2f6;
+  .delete-button {
+    height: 100%;
+  }
   .header {
     height: 40px;
     background-color: #ed8936;
