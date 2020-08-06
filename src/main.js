@@ -11,7 +11,7 @@ import "mint-ui/lib/style.css";
 // import esriLoader from "esri-loader";
 
 Vue.config.productionTip = false
-
+// import esriLoader from "esri-loader";
 // esriLoader.loadScript({
 //   dojoConfig: {
 //     async: true,

@@ -125,6 +125,14 @@ export default {
         });
         return;
       }
+      if(vm.loginPWD.length > 20 || vm.loginPWD.length < 8) {
+        Toast("请输入8-20位密码!");
+        return;
+      }
+      if(vm.confirmPwd.length > 20 || vm.confirmPwd.length < 8) {
+        Toast("请输入8-20位密码!");
+        return;
+      }
       if (!vm.checked) {
         Toast("请同意用户协议!");
         return;
@@ -244,7 +252,7 @@ export default {
     }
   }
   p {
-    font-size: 10px;
+    font-size: 14px;
     margin: 20px 0;
     text-align: center;
     color: #a0aec0;
