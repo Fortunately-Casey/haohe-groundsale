@@ -12,8 +12,20 @@
         <van-field v-model="linkPhone" type="number" label="手机号码" placeholder="请输入手机号码" />
       </van-cell-group>
       <div class="idCard">
-        <van-uploader v-model="certBackPic" multiple :max-count="1" :after-read="uploadImgs" />
-        <van-uploader v-model="certFrontPic" multiple :max-count="1" :after-read="uploadImgs" />
+        <van-uploader
+          v-model="certBackPic"
+          multiple
+          :max-count="1"
+          :after-read="uploadImgs"
+          capture="camera"
+        />
+        <van-uploader
+          v-model="certFrontPic"
+          multiple
+          :max-count="1"
+          :after-read="uploadImgs"
+          capture="camera"
+        />
       </div>
       <div class="id-name">
         <div class="card1">身份证背面</div>
@@ -23,8 +35,20 @@
         <van-field v-model="householdNumber" type="number" label="户号" placeholder="请输入户号" />
       </van-cell-group>
       <div class="houseID">
-        <van-uploader v-model="householdPicBack" multiple :max-count="1" :after-read="uploadImgs" />
-        <van-uploader v-model="householdPicFront" multiple :max-count="1" :after-read="uploadImgs" />
+        <van-uploader
+          v-model="householdPicBack"
+          multiple
+          :max-count="1"
+          :after-read="uploadImgs"
+          capture="camera"
+        />
+        <van-uploader
+          v-model="householdPicFront"
+          multiple
+          :max-count="1"
+          :after-read="uploadImgs"
+          capture="camera"
+        />
       </div>
       <div class="id-name">
         <div class="card1">户口本首页</div>
@@ -269,7 +293,7 @@ export default {
         Notify({ type: "warning", message: "请拍摄完整的户口本信息！" });
         return;
       }
-      
+
       if (!phoneReg.test(Number(vm.linkPhone))) {
         Toast({
           message: "请输入合法手机号！",
@@ -284,7 +308,6 @@ export default {
           Toast("请签名");
           return;
         }
-        // console.log();
         const data = this.$refs.canvas.toDataURL();
         const myBlob = this.dataURLToBlob(data);
         this.signImage = myBlob;
@@ -310,7 +333,6 @@ export default {
           canvas.height = 300;
           /* drawImage画布绘制的方法。(0,0)表示以Canvas画布左上角为起点，400，300是将图片按给定的像素进行缩小。
           如果不指定缩小的像素图片将以图片原始大小进行绘制，图片像素如果大于画布将会从左上角开始按画布大小部分绘制图片，最后的图片就是张局部图。*/
-
           context.drawImage(img, 0, 0, 400, 300);
           // 将绘制完成的图片重新转化为base64编码，file.file.type为图片类型，0.92为默认压缩质量
           file.content = canvas.toDataURL(file.file.type, 0.5);

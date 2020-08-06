@@ -8,31 +8,57 @@
     <div class="content">
       <div class="title">第一经营人</div>
       <van-cell-group>
-        <van-field v-model="name" label="真实姓名" placeholder="请输入真实姓名" disabled/>
-        <van-field v-model="linkPhone" label="手机号码" placeholder="请输入手机号码" disabled/>
+        <van-field v-model="name" label="真实姓名" placeholder="请输入真实姓名" disabled />
+        <van-field v-model="linkPhone" label="手机号码" placeholder="请输入手机号码" disabled />
       </van-cell-group>
       <div class="idCard">
-        <van-uploader v-model="certBackPic" multiple :max-count="1" capture="camara" disabled :deletable="false"/>
-        <van-uploader v-model="certFrontPic" multiple :max-count="1" capture="camara" disabled :deletable="false"/>
+        <van-uploader
+          v-model="certBackPic"
+          multiple
+          :max-count="1"
+          capture="camara"
+          disabled
+          :deletable="false"
+        />
+        <van-uploader
+          v-model="certFrontPic"
+          multiple
+          :max-count="1"
+          capture="camara"
+          disabled
+          :deletable="false"
+        />
       </div>
       <div class="id-name">
         <div class="card1">身份证背面</div>
         <div class="card2">身份证正面</div>
       </div>
       <van-cell-group>
-        <van-field v-model="householdNumber" label="户号" placeholder="请输入户号" disabled/>
+        <van-field v-model="householdNumber" label="户号" placeholder="请输入户号" disabled />
       </van-cell-group>
       <div class="houseID">
-        <van-uploader v-model="householdPicBack" multiple :max-count="1" capture="camara" disabled :deletable="false"/>
-        <van-uploader v-model="householdPicFront" multiple :max-count="1" capture="camara" disabled :deletable="false"/>
+        <van-uploader
+          v-model="householdPicBack"
+          multiple
+          :max-count="1"
+          capture="camara"
+          disabled
+          :deletable="false"
+        />
+        <van-uploader
+          v-model="householdPicFront"
+          multiple
+          :max-count="1"
+          capture="camara"
+          disabled
+          :deletable="false"
+        />
       </div>
       <div class="id-name">
         <div class="card1">户口本首页</div>
         <div class="card2">申请人户籍页</div>
       </div>
-      <div class="title">
-        其他经营人（直系亲属）
-      </div>
+      <div class="title">其他经营人（直系亲属）</div>
       <div v-if="isShowPeopleList">
         <van-cell-group
           v-for="(item,index) in otherOperators"
@@ -40,8 +66,8 @@
           style="margin-bottom:10px"
         >
           <!-- <left-slider :index="index" @deleteItem="deleteItem(index)" :ref="index"> -->
-            <van-field v-model="item.linkman" label="人员姓名" placeholder="请输入真实姓名" disabled/>
-            <van-field v-model="item.linkPhone" label="手机号码" placeholder="请输入手机号码" disabled/>
+          <van-field v-model="item.linkman" label="人员姓名" placeholder="请输入真实姓名" disabled />
+          <van-field v-model="item.linkPhone" label="手机号码" placeholder="请输入手机号码" disabled />
           <!-- </left-slider> -->
         </van-cell-group>
       </div>
@@ -125,31 +151,41 @@ export default {
     getDetail() {
       let vm = this;
       Indicator.open();
-      http.get(api.GETSTALLAPPLICATIONINFO,{
-        id: vm.$route.query.id
-      }).then((resp) => {
-        Indicator.close();
-        console.log(resp.data.data);
-        let res = resp.data.data;
-        vm.name = res.name;
-        vm.linkPhone = res.linkPhone;
-        vm.householdNumber = res.householdNumber;
-        vm.otherOperators = res.linkMEN;
-        vm.range = res.businessScope;
-        vm.type = res.businessType;
-        vm.certBackPic = [{
-          url:res.certBackPic
-        }]
-        vm.certFrontPic = [{
-          url:res.certFrontPic
-        }]
-        vm.householdPicBack = [{
-          url:res.householdPicBack
-        }]
-        vm.householdPicFront = [{
-          url:res.householdPicFront
-        }]
-      })
+      http
+        .get(api.GETSTALLAPPLICATIONINFO, {
+          id: vm.$route.query.id,
+        })
+        .then((resp) => {
+          Indicator.close();
+          console.log(resp.data.data);
+          let res = resp.data.data;
+          vm.name = res.name;
+          vm.linkPhone = res.linkPhone;
+          vm.householdNumber = res.householdNumber;
+          vm.otherOperators = res.linkMEN;
+          vm.range = res.businessScope;
+          vm.type = res.businessType;
+          vm.certBackPic = [
+            {
+              url: res.certBackPic,
+            },
+          ];
+          vm.certFrontPic = [
+            {
+              url: res.certFrontPic,
+            },
+          ];
+          vm.householdPicBack = [
+            {
+              url: res.householdPicBack,
+            },
+          ];
+          vm.householdPicFront = [
+            {
+              url: res.householdPicFront,
+            },
+          ];
+        });
     },
     getBusinessScope2() {
       let vm = this;
@@ -235,7 +271,7 @@ export default {
       vm.otherOperators.map((v) => {
         if (!v.linkman || !vm.linkPhone) {
           flag = false;
-        }else {
+        } else {
           flag = true;
         }
       });
@@ -271,10 +307,10 @@ export default {
         if (resp.data.success) {
           this.$router.push({
             path: "/applyFinished",
-            query:{
-              type:vm.type,
-              date:Todate(resp.data.data)
-            }
+            query: {
+              type: vm.type,
+              date: Todate(resp.data.data),
+            },
           });
           Notify({ type: "success", message: "申请成功!" });
         } else {

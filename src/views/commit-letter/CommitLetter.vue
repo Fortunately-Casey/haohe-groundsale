@@ -66,7 +66,7 @@ export default {
       // console.log();
       const data = this.$refs.canvas.toDataURL();
       const myBlob = this.dataURLToBlob(data);
-      console.log(myBlob)
+      console.log(myBlob);
       // const formData = new FormData();
     },
     dataURLToBlob(dataURL) {

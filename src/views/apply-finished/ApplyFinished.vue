@@ -3,7 +3,7 @@
     <div class="header">
       <!-- <div class="back" @click="back">
         <van-icon name="arrow-left" />返回
-      </div> -->
+      </div>-->
       申请完成
     </div>
     <div class="content">
@@ -11,7 +11,10 @@
         您已申请
         <span>{{type}}</span>摊位
       </p>
-      <p>请您于<span style="color:#dd2626">{{date}} 17:00</span>前，携带身份证、户口本等相关证件，前往濠河管理中心进行现场审核，逾期作废。</p>
+      <p>
+        请您于
+        <span style="color:#dd2626">{{date}} 17:00</span>前，携带身份证、户口本等相关证件，前往濠河管理中心进行现场审核，逾期作废。
+      </p>
       <p>审核内容包括：</p>
       <p>（1）确认摊位号</p>
       <p>（2）缴纳押金、管理费</p>
@@ -30,17 +33,15 @@ export default {
     return {
       checked: false,
       Signature_Pad: "",
-      type:"",
-      date:""
+      type: "",
+      date: "",
     };
   },
   created() {
     this.type = this.$route.query.type;
     this.date = this.$route.query.date.split(" ")[0];
   },
-  mounted() {
-  
-  },
+  mounted() {},
   methods: {
     back() {
       this.$router.push({
