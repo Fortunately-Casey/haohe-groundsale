@@ -41,8 +41,10 @@
       <p>6、所售商品出现质量纠纷自行协调解决，否则由市场监管部门依法依规处理。</p>
     </div>
     <div class="bottom-agree" :class="checked?'checked':'unchecked'">
-      <van-checkbox v-model="checked" shape="square" icon-size="16px" checked-color="#ed8936"></van-checkbox>
-      <span style="color:#fff" @click="nextStep">{{checked?'下一步':'我已阅读方案'}}</span>
+      <div class="checkbox">
+        <van-checkbox v-model="checked" shape="square" icon-size="16px" checked-color="#ed8936"></van-checkbox>
+      </div>
+      <div class="text" style="color:#fff" @click.stop="nextStep">{{checked?'下一步':'我已阅读方案'}}</div>
     </div>
   </div>
 </template>
@@ -135,8 +137,17 @@ export default {
     font-size: 16px;
     color: #ffffff;
     display: flex;
-    justify-content: center;
-    align-content: center;
+    .checkbox {
+      width: 140px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding-right: 10px;
+    }
+    .text {
+      flex: 1;
+      line-height: 60px;
+    }
   }
   .unchecked {
     background: #a0aec0;

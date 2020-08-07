@@ -153,7 +153,7 @@
 <script>
 import * as api from "@/service/apiList";
 import http from "@/service/service";
-import { Toast, Notify } from "vant";
+import { Toast, Notify, Dialog} from "vant";
 import { Indicator } from "mint-ui";
 import { Todate, getRandomString } from "@/common/tool/tool";
 import SignaturePad from "signature_pad";
@@ -419,7 +419,7 @@ export default {
         this.dataURLtoBlob(this.householdPicFront[0].content),
         this.householdPicFront[0].file.name
       );
-      Indicator.open();
+      
       vm.formData = new FormData();
       let picName1 = getRandomString(10);
       let picName2 = getRandomString(10);
@@ -445,21 +445,31 @@ export default {
       );
       let signatureName = getRandomString(10);
       vm.formData.append("signaturePic", vm.signImage, `${signatureName}.png`);
-      http.upload(api.STALLCOMMIT, vm.formData).then((resp) => {
-        Indicator.close();
-        if (resp.data.success) {
-          this.$router.push({
-            path: "/applyFinished",
-            query: {
-              type: vm.type,
-              date: resp.data.data,
-            },
+      Dialog.confirm({
+        title: "提交申请",
+        message: "确认要提交当前的申请信息吗？",
+      })
+        .then(() => {
+          Indicator.open();
+          http.upload(api.STALLCOMMIT, vm.formData).then((resp) => {
+            Indicator.close();
+            if (resp.data.success) {
+              this.$router.push({
+                path: "/applyFinished",
+                query: {
+                  type: vm.type,
+                  date: resp.data.data,
+                },
+              });
+              Notify({ type: "success", message: "申请成功!" });
+            } else {
+              Notify({ type: "danger", message: resp.data.message });
+            }
           });
-          Notify({ type: "success", message: "申请成功!" });
-        } else {
-          Notify({ type: "danger", message: resp.data.message });
-        }
-      });
+        })
+        .catch(() => {
+          // on cancel
+        });
     },
     dataURLtoBlob: function (dataurl) {
       var arr = dataurl.split(","),
