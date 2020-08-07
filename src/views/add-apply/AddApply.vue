@@ -153,7 +153,7 @@
 <script>
 import * as api from "@/service/apiList";
 import http from "@/service/service";
-import { Toast, Notify, Dialog} from "vant";
+import { Toast, Notify, Dialog } from "vant";
 import { Indicator } from "mint-ui";
 import { Todate, getRandomString } from "@/common/tool/tool";
 import SignaturePad from "signature_pad";
@@ -169,12 +169,7 @@ export default {
       isShowPeopleList: true,
       checked: false,
       range: "",
-      otherOperators: [
-        {
-          linkman: "",
-          linkPhone: "",
-        },
-      ],
+      otherOperators: [],
       type: "",
       rangeColumns: [],
       typeColumns: [],
@@ -419,7 +414,7 @@ export default {
         this.dataURLtoBlob(this.householdPicFront[0].content),
         this.householdPicFront[0].file.name
       );
-      
+
       vm.formData = new FormData();
       let picName1 = getRandomString(10);
       let picName2 = getRandomString(10);

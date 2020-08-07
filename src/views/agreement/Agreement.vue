@@ -4,7 +4,6 @@
       <div class="back" @click="back">
         <van-icon name="arrow-left" />返回
       </div>我的申请
-      <div class="logout">退出登录</div>
     </div>
     <div class="content">
       <h2>环西广场夜间临时摊位准入实施方案</h2>

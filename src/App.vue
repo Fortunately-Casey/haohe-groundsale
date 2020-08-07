@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-      <router-view />
+    <router-view />
   </div>
 </template>
 
@@ -11,7 +11,7 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
-  overflow-x:hidden;
+  overflow-x: hidden;
 }
 #app {
   width: 100%;
@@ -29,23 +29,26 @@ body {
   width: 130px !important;
 }
 .esri-widget {
-  display: none!important;
+  display: none !important;
 }
 .esri-view .esri-view-surface--touch-none::after {
-  content: ""!important;
-  border: none!important;
-  color: rgba(0, 0, 0, 0)!important;
+  content: "" !important;
+  border: none !important;
+  color: rgba(0, 0, 0, 0) !important;
 }
 .mint-indicator-wrapper {
-  z-index: 999!important;
+  z-index: 999 !important;
 }
 .van-field__control:disabled {
-  color: #323233!important;
+  color: #323233 !important;
 }
-.van-field--disabled .van-field__label{
-  color: #646566!important;
+.van-field--disabled .van-field__label {
+  color: #646566 !important;
 }
 .van-uploader__wrapper--disabled {
-  opacity: 1!important;
+  opacity: 1 !important;
+}
+.van-cell {
+  font-weight: bold !important;
 }
 </style>

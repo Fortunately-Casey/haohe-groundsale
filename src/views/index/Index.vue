@@ -76,10 +76,11 @@ export default {
             status: v.status,
             endTime: v.endTime,
             businessType: v.businessType,
+            auditResult:v.auditResult,
             time: vm.InitTime(v.endTime),
           });
         });
-        vm.timeInterval();
+        // vm.timeInterval();
       });
     },
     goToDetail(id) {
@@ -131,14 +132,15 @@ export default {
     returnStatus(item) {
       let stu;
       if (item.status === 1) {
-        return "audit";
+        stu =  "audit";
       } else if (item.status === 3) {
-        return "lose";
+        stu = "lose";
       } else if (item.status === 2 && item.auditResult) {
-        return "pass";
+        stu = "pass";
       } else if (item.status === 2 && !item.auditResult) {
-        return "not-pass";
+        stu = "not-pass";
       }
+      return stu;
     },
     back() {},
     logout() {
