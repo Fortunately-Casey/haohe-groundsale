@@ -485,7 +485,6 @@ export default {
     clear() {
       this.Signature_Pad.clear();
     },
-    commit() {},
     dataURLToBlob(dataURL) {
       var parts = dataURL.split(";base64,");
       var contentType = parts[0].split(":")[1];
