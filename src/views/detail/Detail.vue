@@ -306,7 +306,7 @@ export default {
       formData.append("certFrontPic", vm.certFrontPic[0].file);
       formData.append("householdPicBack", vm.householdPicBack[0].file);
       formData.append("householdPicFront", vm.householdPicFront[0].file);
-      http.upload(api.STALLCOMMIT, formData).then((resp) => {
+      http.upload(api.STALLCOMMIT, formData,vm).then((resp) => {
         Indicator.close();
         if (resp.data.success) {
           this.$router.push({

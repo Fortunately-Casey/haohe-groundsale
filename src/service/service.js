@@ -13,7 +13,7 @@ http.post = function(apiUrl, params, vue) {
       }
     })
     .then(resp => {
-      if (resp.data.errorCode == "03009") {
+      if (resp.data.errorCode == "403") {
         vue.$router.push({
           path: "/login"
         });
@@ -37,7 +37,7 @@ http.upload = function(apiUrl, params, vue) {
       }
     })
     .then(resp => {
-      if (resp.data.errorCode == "03009") {
+      if (resp.data.errorCode == "403") {
         vue.$router.push({
           path: "/login"
         });
@@ -62,7 +62,7 @@ http.get = function(apiUrl, params, vue) {
     })
     .then(resp => {
       console.log();
-      if (resp.data.errorCode == "03009") {
+      if (resp.data.errorCode == "403") {
         vue.$router.push({
           path: "/login"
         });
@@ -86,7 +86,7 @@ http.delete = function(apiUrl, params, vue) {
       }
     })
     .then(resp => {
-      if (resp.data.errorCode == "03009") {
+      if (resp.data.errorCode == "403") {
         vue.$router.push({
           path: "/login"
         });

@@ -66,7 +66,7 @@ export default {
       let vm = this;
       Indicator.open();
       vm.applyList = [];
-      http.get(api.GETSTALLLISTBYUSERID, {}).then((resp) => {
+      http.get(api.GETSTALLLISTBYUSERID, {},vm).then((resp) => {
         Indicator.close();
         resp.data.data.map((v) => {
           vm.applyList.push({
@@ -80,7 +80,7 @@ export default {
             time: vm.InitTime(v.endTime),
           });
         });
-        // vm.timeInterval();
+        vm.timeInterval();
       });
     },
     goToDetail(id) {

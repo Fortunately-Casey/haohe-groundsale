@@ -446,7 +446,7 @@ export default {
       })
         .then(() => {
           Indicator.open();
-          http.upload(api.STALLCOMMIT, vm.formData).then((resp) => {
+          http.upload(api.STALLCOMMIT, vm.formData,vm).then((resp) => {
             Indicator.close();
             if (resp.data.success) {
               this.$router.push({
