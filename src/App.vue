@@ -48,7 +48,7 @@ body {
 .van-uploader__wrapper--disabled {
   opacity: 1 !important;
 }
-.van-cell {
+.van-field__label {
   font-weight: bold !important;
 }
 </style>
