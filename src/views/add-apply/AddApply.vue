@@ -602,6 +602,7 @@ export default {
               // Toast(111);
               if (!isiOS) {
                 if (Orientation != "" && Orientation != 1) {
+                  // Toast("旋转");
                   switch (Orientation) {
                     case 6: //需要顺时针（向左）90度旋转
                       self.rotateImg(img, "left", canvas);
@@ -616,14 +617,20 @@ export default {
                       break;
                   }
                 }
+                context.drawImage(img, 0, 0, 600, 800);
+                // 将绘制完成的图片重新转化为base64编码，file.file.type为图片类型，0.92为默认压缩质量
+                file.content = canvas.toDataURL(file.file.type, 0.5);
+                console.log(file.content);
+                self.isShowOverlay = false;
+              } else {
+                // /* drawImage画布绘制的方法。(0,0)表示以Canvas画布左上角为起点，400，300是将图片按给定的像素进行缩小。
+                // 如果不指定缩小的像素图片将以图片原始大小进行绘制，图片像素如果大于画布将会从左上角开始按画布大小部分绘制图片，最后的图片就是张局部图。*/
+                context.drawImage(img, 0, 0, 600, 800);
+                // 将绘制完成的图片重新转化为base64编码，file.file.type为图片类型，0.92为默认压缩质量
+                file.content = canvas.toDataURL(file.file.type, 1);
+                self.isShowOverlay = false;
               }
 
-              //     /* drawImage画布绘制的方法。(0,0)表示以Canvas画布左上角为起点，400，300是将图片按给定的像素进行缩小。
-              // 如果不指定缩小的像素图片将以图片原始大小进行绘制，图片像素如果大于画布将会从左上角开始按画布大小部分绘制图片，最后的图片就是张局部图。*/
-              context.drawImage(img, 0, 0, 600, 800);
-              // 将绘制完成的图片重新转化为base64编码，file.file.type为图片类型，0.92为默认压缩质量
-              file.content = canvas.toDataURL(file.file.type, 1);
-              self.isShowOverlay = false;
               // file.file = img;
               // file.file = self.blobToFile(
               //   self.dataURLtoBlob(canvas.toDataURL(file.file.type, 1)),
