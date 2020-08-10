@@ -13,7 +13,7 @@
       </van-cell-group>
       <div class="idCard">
         <van-uploader
-          v-model="certBackPic"
+          v-model="certFrontPic"
           multiple
           :max-count="1"
           capture="camara"
@@ -22,7 +22,7 @@
           image-fit="cover"
         />
         <van-uploader
-          v-model="certFrontPic"
+          v-model="certBackPic"
           multiple
           :max-count="1"
           capture="camara"
@@ -32,8 +32,8 @@
         />
       </div>
       <div class="id-name">
-        <div class="card1">身份证背面</div>
         <div class="card2">身份证正面</div>
+        <div class="card1">身份证背面</div>
       </div>
       <van-cell-group>
         <van-field v-model="householdNumber" label="户号" placeholder="请输入户号" disabled />
@@ -306,7 +306,7 @@ export default {
       formData.append("certFrontPic", vm.certFrontPic[0].file);
       formData.append("householdPicBack", vm.householdPicBack[0].file);
       formData.append("householdPicFront", vm.householdPicFront[0].file);
-      http.upload(api.STALLCOMMIT, formData,vm).then((resp) => {
+      http.upload(api.STALLCOMMIT, formData, vm).then((resp) => {
         Indicator.close();
         if (resp.data.success) {
           this.$router.push({

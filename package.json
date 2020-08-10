@@ -12,6 +12,7 @@
     "better-scroll": "^1.15.2",
     "core-js": "^3.6.5",
     "esri-loader": "^2.15.0",
+    "exif-js": "^2.3.0",
     "lib-flexible": "^0.3.2",
     "mint-ui": "^2.2.13",
     "postcss-px2rem-exclude": "^0.0.6",

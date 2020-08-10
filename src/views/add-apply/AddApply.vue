@@ -13,7 +13,7 @@
       </van-cell-group>
       <div class="idCard">
         <van-uploader
-          v-model="certBackPic"
+          v-model="certFrontPic"
           multiple
           :max-count="1"
           :after-read="uploadImgs"
@@ -21,7 +21,7 @@
           image-fit="cover"
         />
         <van-uploader
-          v-model="certFrontPic"
+          v-model="certBackPic"
           multiple
           :max-count="1"
           :after-read="uploadImgs"
@@ -30,8 +30,8 @@
         />
       </div>
       <div class="id-name">
-        <div class="card1">身份证背面</div>
         <div class="card2">身份证正面</div>
+        <div class="card1">身份证背面</div>
       </div>
       <van-cell-group>
         <van-field v-model="householdNumber" type="number" label="户号" placeholder="请输入户号" />
@@ -147,6 +147,12 @@
       <div class="chose-button" @click="next" v-if="isShownext">下一步</div>
       <div class="chose-button" @click="confirm" v-if="!isShownext">提交申请</div>
     </div>
+    <van-overlay
+      :show="isShowOverlay"
+      style="display:flex;align-items:center;justify-content: center;"
+    >
+      <van-loading />
+    </van-overlay>
   </div>
 </template>
 
@@ -157,9 +163,11 @@ import { Toast, Notify, Dialog } from "vant";
 import { Indicator } from "mint-ui";
 import { Todate, getRandomString } from "@/common/tool/tool";
 import SignaturePad from "signature_pad";
+import Exif from "exif-js";
 export default {
   data() {
     return {
+      isShowOverlay: false,
       isAdd: true,
       isShownext: true,
       name: "",
@@ -195,6 +203,18 @@ export default {
     });
   },
   methods: {
+    getImageTag(file, tag) {
+      if (!file) return 0;
+      return new Promise((resolve, reject) => {
+        /* eslint-disable func-names */
+        // 箭头函数会修改this，所以这里不能用箭头函数
+        Exif.getData(file, function () {
+          const o = Exif.getTag(this, tag);
+          console.log(o);
+          resolve(o);
+        });
+      });
+    },
     getBusinessScope2() {
       let vm = this;
       Indicator.open();
@@ -323,31 +343,67 @@ export default {
       }
     },
     uploadImgs(file) {
+      let vm = this;
+      vm.isShowOverlay = true;
       // 大于1MB的jpeg和png图片都缩小像素上传
-      if (/\/(?:jpeg|png)/i.test(file.file.type) && file.file.size > 1000000) {
-        // 创建Canvas对象(画布)
-        let canvas = document.createElement("canvas");
-        // 获取对应的CanvasRenderingContext2D对象(画笔)
-        let context = canvas.getContext("2d");
-        // 创建新的图片对象
-        let img = new Image();
-        // 指定图片的DataURL(图片的base64编码数据)
-        img.src = file.content;
-        // 监听浏览器加载图片完成，然后进行进行绘制
-        img.onload = () => {
-          // 指定canvas画布大小，该大小为最后生成图片的大小
-          canvas.width = 600;
-          canvas.height = 800;
-          /* drawImage画布绘制的方法。(0,0)表示以Canvas画布左上角为起点，400，300是将图片按给定的像素进行缩小。
-          如果不指定缩小的像素图片将以图片原始大小进行绘制，图片像素如果大于画布将会从左上角开始按画布大小部分绘制图片，最后的图片就是张局部图。*/
-          context.drawImage(img, 0, 0, 600, 800);
-          // 将绘制完成的图片重新转化为base64编码，file.file.type为图片类型，0.92为默认压缩质量
-          file.content = canvas.toDataURL(file.file.type, 1);
-          // console.log(file)
-          // 最后将base64编码的图片保存到数组中，留待上传。
-        };
-      }
+      // if (/\/(?:jpeg|png)/i.test(file.file.type) && file.file.size > 1000000) {
+      //   // 创建Canvas对象(画布)
+      //   let canvas = document.createElement("canvas");
+      //   // 获取对应的CanvasRenderingContext2D对象(画笔)
+      //   let context = canvas.getContext("2d");
+      //   // 创建新的图片对象
+      //   let img = new Image();
+      //   // 指定图片的DataURL(图片的base64编码数据)
+      //   img.src = file.content;
+      //   // 监听浏览器加载图片完成，然后进行进行绘制
+      //   img.onload = () => {
+      //     // 指定canvas画布大小，该大小为最后生成图片的大小
+      //     canvas.width = 600;
+      //     canvas.height = 800;
+      //     /* drawImage画布绘制的方法。(0,0)表示以Canvas画布左上角为起点，400，300是将图片按给定的像素进行缩小。
+      //     如果不指定缩小的像素图片将以图片原始大小进行绘制，图片像素如果大于画布将会从左上角开始按画布大小部分绘制图片，最后的图片就是张局部图。*/
+      //     context.drawImage(img, 0, 0, 600, 800);
+      //     // 将绘制完成的图片重新转化为base64编码，file.file.type为图片类型，0.92为默认压缩质量
+      //     file.content = canvas.toDataURL(file.file.type, 1);
+      //     // 最后将base64编码的图片保存到数组中，留待上传。
+      //   };
+      // }
+      vm.imgPreview(file);
     },
+    // imgPreview(file) {
+    //   let self = this;
+    //   let Orientation;
+    //   //去获取拍照时的信息，解决拍出来的照片旋转问题
+    //   Exif.getData(file, function () {
+    //     Orientation = Exif.getTag(this, "Orientation");
+    //   });
+    //   // 看支持不支持FileReader
+    //   if (!file || !window.FileReader) return;
+    //   if (/^image/.test(file.type)) {
+    //     // 创建一个reader
+    //     let reader = new FileReader();
+    //     // 将图片2将转成 base64 格式
+    //     reader.readAsDataURL(file);
+    //     // 读取成功后的回调
+    //     reader.onloadend = function () {
+    //       // console.log(this.result);
+    //       let result = this.result;
+    //       let img = new Image();
+    //       img.src = result;
+    //       //判断图片是否大于500K,是就直接上传，反之压缩图片
+    //       if (this.result.length <= 500 * 1024) {
+    //         self.headerImage = this.result;
+    //         self.postImg();
+    //       } else {
+    //         img.onload = function () {
+    //           let data = self.compress(img, Orientation);
+    //           self.headerImage = data;
+    //           self.postImg();
+    //         };
+    //       }
+    //     };
+    //   }
+    // },
     confirm() {
       let vm = this;
       let flag = true;
@@ -414,7 +470,12 @@ export default {
         this.dataURLtoBlob(this.householdPicFront[0].content),
         this.householdPicFront[0].file.name
       );
-
+      console.log(
+        certFrontPic,
+        certBackPic,
+        householdPicBack,
+        householdPicFront
+      );
       vm.formData = new FormData();
       let picName1 = getRandomString(10);
       let picName2 = getRandomString(10);
@@ -446,7 +507,7 @@ export default {
       })
         .then(() => {
           Indicator.open();
-          http.upload(api.STALLCOMMIT, vm.formData,vm).then((resp) => {
+          http.upload(api.STALLCOMMIT, vm.formData, vm).then((resp) => {
             Indicator.close();
             if (resp.data.success) {
               this.$router.push({
@@ -495,6 +556,263 @@ export default {
         uInt8Array[i] = raw.charCodeAt(i);
       }
       return new Blob([uInt8Array], { type: contentType });
+    },
+
+    imgPreview(file) {
+      let self = this;
+      let Orientation;
+      //去获取拍照时的信息，解决拍出来的照片旋转问题
+      Exif.getData(file.file, function () {
+        Orientation = Exif.getTag(this, "Orientation");
+        // Toast(Orientation);
+        // 看支持不支持FileReader
+        if (!file.file || !window.FileReader) return;
+        if (/^image/.test(file.file.type)) {
+          // 创建一个reader
+          let reader = new FileReader();
+          // 将图片2将转成 base64 格式
+          reader.readAsDataURL(file.file);
+          // 读取成功后的回调
+          reader.onloadend = function () {
+            // console.log(this.result);
+            // let result = this.result;
+            let img = new Image();
+            // img.src = result;
+
+            // 创建新的图片对象
+            // let img = new Image();
+            // 指定图片的DataURL(图片的base64编码数据)
+            let canvas = document.createElement("canvas");
+            // 获取对应的CanvasRenderingContext2D对象(画笔)
+            let context = canvas.getContext("2d");
+            canvas.width = 600;
+            canvas.height = 800;
+            img.src = file.content;
+            //判断图片是否大于500K,是就直接上传，反之压缩图片
+            // console.log(img);
+            img.onload = function () {
+              // let data = self.compress(img, Orientation, file, context);
+
+              // 监听浏览器加载图片完成，然后进行进行绘制
+              // img.onload = () => {
+              //   // 指定canvas画布大小，该大小为最后生成图片的大小
+              // };
+              let mobileMatch = window.navigator.userAgent;
+              var isiOS = !!mobileMatch.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+              // Toast(111);
+              if (!isiOS) {
+                if (Orientation != "" && Orientation != 1) {
+                  switch (Orientation) {
+                    case 6: //需要顺时针（向左）90度旋转
+                      self.rotateImg(img, "left", canvas);
+                      // Toast('旋转');
+                      break;
+                    case 8: //需要逆时针（向右）90度旋转
+                      self.rotateImg(img, "right", canvas);
+                      break;
+                    case 3: //需要180度旋转
+                      self.rotateImg(img, "right", canvas); //转两次
+                      self.rotateImg(img, "right", canvas);
+                      break;
+                  }
+                }
+              }
+
+              //     /* drawImage画布绘制的方法。(0,0)表示以Canvas画布左上角为起点，400，300是将图片按给定的像素进行缩小。
+              // 如果不指定缩小的像素图片将以图片原始大小进行绘制，图片像素如果大于画布将会从左上角开始按画布大小部分绘制图片，最后的图片就是张局部图。*/
+              context.drawImage(img, 0, 0, 600, 800);
+              // 将绘制完成的图片重新转化为base64编码，file.file.type为图片类型，0.92为默认压缩质量
+              file.content = canvas.toDataURL(file.file.type, 1);
+              self.isShowOverlay = false;
+              // file.file = img;
+              // file.file = self.blobToFile(
+              //   self.dataURLtoBlob(canvas.toDataURL(file.file.type, 1)),
+              //   file.file.name
+              // );
+
+              // self.blobToFile(
+              //   self.dataURLtoBlob(self.householdPicBack[0].content),
+              //   self.householdPicBack[0].file.name
+              // );
+              // self.headerImage = data;
+              // self.postImg();
+            };
+            // if (this.result.length <= 500 * 1024) {
+            //   Toast("小于500K");
+            //   img.onload = function () {
+            //     // let data = self.compress(img, Orientation, file, context);
+            //     let canvas = document.createElement("canvas");
+            //     // 获取对应的CanvasRenderingContext2D对象(画笔)
+            //     let context = canvas.getContext("2d");
+            //     // 监听浏览器加载图片完成，然后进行进行绘制
+            //     // img.onload = () => {
+            //     //   // 指定canvas画布大小，该大小为最后生成图片的大小
+            //     // };
+            //     canvas.width = 300;
+            //     canvas.height = 400;
+            //     //     /* drawImage画布绘制的方法。(0,0)表示以Canvas画布左上角为起点，400，300是将图片按给定的像素进行缩小。
+            //     // 如果不指定缩小的像素图片将以图片原始大小进行绘制，图片像素如果大于画布将会从左上角开始按画布大小部分绘制图片，最后的图片就是张局部图。*/
+            //     context.drawImage(img, 0, 0, 300, 400);
+            //     // 将绘制完成的图片重新转化为base64编码，file.file.type为图片类型，0.92为默认压缩质量
+            //     file.content = canvas.toDataURL(file.file.type, 0.1);
+            //     console.log(file);
+            //     // self.headerImage = data;
+            //     // self.postImg();
+            //   };
+            // } else {
+            //   Toast("大于500K");
+            //   img.onload = function () {
+            //     // let data = self.compress(img, Orientation, file, context);
+            //     let canvas = document.createElement("canvas");
+            //     // 获取对应的CanvasRenderingContext2D对象(画笔)
+            //     let context = canvas.getContext("2d");
+            //     // 监听浏览器加载图片完成，然后进行进行绘制
+            //     // img.onload = () => {
+            //     //   // 指定canvas画布大小，该大小为最后生成图片的大小
+            //     // };
+            //     canvas.width = 300;
+            //     canvas.height = 400;
+            //     //     /* drawImage画布绘制的方法。(0,0)表示以Canvas画布左上角为起点，400，300是将图片按给定的像素进行缩小。
+            //     // 如果不指定缩小的像素图片将以图片原始大小进行绘制，图片像素如果大于画布将会从左上角开始按画布大小部分绘制图片，最后的图片就是张局部图。*/
+            //     context.drawImage(img, 0, 0, 300, 400);
+            //     // 将绘制完成的图片重新转化为base64编码，file.file.type为图片类型，0.92为默认压缩质量
+            //     file.content = canvas.toDataURL(file.file.type, 0.1);
+            //     console.log(file);
+            //     // self.headerImage = data;
+            //     // self.postImg();
+            //   };
+            // }
+          };
+        }
+      });
+    },
+    // 压缩图片
+    compress(img, Orientation, file, context) {
+      console.log("1111");
+      // let canvas = document.createElement("canvas");
+      // let ctx = canvas.getContext("2d");
+      // //瓦片canvas
+      // let tCanvas = document.createElement("canvas");
+      // let tctx = tCanvas.getContext("2d");
+      // // let initSize = img.src.length;
+      // let width = img.width;
+      // let height = img.height;
+      // //如果图片大于四百万像素，计算压缩比并将大小压至400万以下
+      // let ratio;
+      // if ((ratio = (width * height) / 4000000) > 1) {
+      //   // console.log("大于400万像素");
+      //   ratio = Math.sqrt(ratio);
+      //   width /= ratio;
+      //   height /= ratio;
+      // } else {
+      //   ratio = 1;
+      // }
+      // canvas.width = width;
+      // canvas.height = height;
+      // //        铺底色
+      // ctx.fillStyle = "#fff";
+      // ctx.fillRect(0, 0, canvas.width, canvas.height);
+      // //如果图片像素大于100万则使用瓦片绘制
+      // let count;
+      // if ((count = (width * height) / 1000000) > 1) {
+      //   // console.log("超过100W像素");
+      //   count = ~~(Math.sqrt(count) + 1); //计算要分成多少块瓦片
+      //   //            计算每块瓦片的宽和高
+      //   let nw = ~~(width / count);
+      //   let nh = ~~(height / count);
+      //   tCanvas.width = nw;
+      //   tCanvas.height = nh;
+      //   for (let i = 0; i < count; i++) {
+      //     for (let j = 0; j < count; j++) {
+      //       tctx.drawImage(
+      //         img,
+      //         i * nw * ratio,
+      //         j * nh * ratio,
+      //         nw * ratio,
+      //         nh * ratio,
+      //         0,
+      //         0,
+      //         nw,
+      //         nh
+      //       );
+      //       ctx.drawImage(tCanvas, i * nw, j * nh, nw, nh);
+      //     }
+      //   }
+      // } else {
+      //   ctx.drawImage(img, 0, 0, width, height);
+      // }
+
+      //修复ios上传图片的时候 被旋转的问题
+
+      // 最后将base64编码的图片保存到数组中，留待上传。
+
+      // //进行最小压缩
+      // let ndata = canvas.toDataURL("image/jpeg", 0.1);
+      // tCanvas.width = tCanvas.height = canvas.width = canvas.height = 0;
+      // return ndata;
+    },
+    // 旋转图片
+    rotateImg(img, direction, canvas) {
+      //最小与最大旋转方向，图片旋转4次后回到原方向
+      const min_step = 0;
+      const max_step = 3;
+      if (img == null) return;
+      //img的高度和宽度不能在img元素隐藏后获取，否则会出错
+      let height = img.height;
+      let width = img.width;
+      let step = 2;
+      if (step == null) {
+        step = min_step;
+      }
+      if (direction == "right") {
+        step++;
+        //旋转到原位置，即超过最大值
+        step > max_step && (step = min_step);
+      } else {
+        step--;
+        step < min_step && (step = max_step);
+      }
+      //旋转角度以弧度值为参数
+      let degree = (step * 90 * Math.PI) / 180;
+      let ctx = canvas.getContext("2d");
+      switch (step) {
+        case 0:
+          canvas.width = width;
+          canvas.height = height;
+          ctx.drawImage(img, 0, 0);
+          break;
+        case 1:
+          canvas.width = height;
+          canvas.height = width;
+          ctx.rotate(degree);
+          ctx.drawImage(img, 0, -height);
+          break;
+        case 2:
+          canvas.width = width;
+          canvas.height = height;
+          ctx.rotate(degree);
+          ctx.drawImage(img, -width, -height);
+          break;
+        case 3:
+          canvas.width = height;
+          canvas.height = width;
+          ctx.rotate(degree);
+          ctx.drawImage(img, -width, 0);
+          break;
+      }
+    },
+    //将base64转换为文件
+    dataURLtoFile(dataurl) {
+      var arr = dataurl.split(","),
+        bstr = atob(arr[1]),
+        n = bstr.length,
+        u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      return new File([u8arr], this.files.name, {
+        type: this.files.type,
+      });
     },
   },
   components: {},
